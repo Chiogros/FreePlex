@@ -4,11 +4,12 @@ class MovieDAO {
 
     private PDO $db
     
-    function __construct(string $DSN, string $host, int $port, string $username, string $pwd, array $options) {
+    function __construct() {
+        $dsn = "sqlite:";
         try { 
-            $this->db = new PDO($DSN, $username, $pwd, $options); 
+            $this->db = new PDO($dsn); 
         } catch(PDOException $e) { 
-            echo "The database located at " . $DSN . " cannot be opened : " . $e->getMessage(); 
+            echo "The database cannot be opened : " . $e->getMessage(); 
         }
     }
 
