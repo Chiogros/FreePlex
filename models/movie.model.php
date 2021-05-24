@@ -134,41 +134,79 @@ class Movie {
 	    );
     }
     
-    public static function constructorForDAO(array $data) {
-	    return new Movie(
-		    $data['title'],
-		    $data['year'],
-		    $data['classification'],
-		    DateTime::createFromFormat("d/m/Y", $data['release_date']),
-		    $data['runtime'],
-		    $data['genre'],
-		    $data['director'],
-		    $data['writers'],
-		    $data['actors'],
-		    $data['synopsis'],
-		    $data['languages'],
-		    $data['countries'],
+	public static function constructorForDAO(array $data) {
+		return new Movie(
+			$data['title'],
+			$data['year'],
+			$data['classification'],
+			DateTime::createFromFormat("d/m/Y", $data['release_date']),
+			$data['runtime'],
+			$data['genre'],
+			$data['director'],
+			$data['writers'],
+			$data['actors'],
+			$data['synopsis'],
+			$data['languages'],
+			$data['countries'],
 			$data['awards'],
-	        $data['poster_url'],
-	        $data['metascore'],
-	        $data['imdb_rating'],
-	        $data['imdb_votes'],
-	        $data['imdb_id'],
-	        $data['type']
-	    );
+			$data['poster_url'],
+			$data['metascore'],
+			$data['imdb_rating'],
+			$data['imdb_votes'],
+			$data['imdb_id'],
+			$data['type']
+		);
+	}
+    
+	public function __get(string $attribute_name) {
+		return $this->$attribute_name;
+	}
+    
+    public static function get_sortable_attributes() : array {
+	    return array("title", "year", "release_date", "runtime", "languages", "director", "coutries", "metascore", "imdb_rating", "imdb_votes", "type");
     }
     
-    public function __get(string $attribute_name) {
-        return $this->$attribute_name;
-    }
-    
-    public function __set(string $attribute_name, $attribute_value) : bool {
-        if (isset($this->$attribute_name)) {
-	        $this->$attribute_name = $attribute_value;
-	        return true;
-        } else {
-	        return false;
-        }
-    }
+	public function __set(string $attribute_name, $attribute_value) {
+		if (isset($this->$attribute_name) === false)
+			throw new Exception($attribute_name . " doesn't exist as attribute in " . __CLASS__ . ".");
 
+			// throw new Exception("Cannot set " . gettype($attribute_value) . " in " . gettype($this->$attribute_name) . " " . $attribute_name . " in " . __CLASS__ . ".");
+		$this->$attribute_name = $attribute_value;
+	}
+
+	public static function sort_by(string $attribute_name, string $order, array &$movies) {
+	    /*
+	     *	Comparison functions
+	     */
+	    {
+		    $string_and_int_comparison_function = function (Movie $m1, Movie $m2) use ($attribute_name) {
+				return strcmp($m1->$attribute_name, $m2->$attribute_name);
+			};
+			
+			$other_comparison_function = function (Movie $m1, Movie $m2) use ($attribute_name) {
+				if ($m1->$attribute_name > $m2->$attribute_name) return 1;
+				if ($m1->$attribute_name == $m2->$attribute_name) return 0;
+				if ($m1->$attribute_name < $m2->$attribute_name) return -1;
+			};
+		}
+		
+		// Verify that the order is ASC or DESC
+	    if ($order != "ASC" && $order != "DESC")
+			throw new Exception("2nd parameter must be string ASC (for ascending order) or DESC (for descending order)");
+	    
+	    // Verify that attribute_name is allowed to be sorted
+		if (in_array($attribute_name, Movie::get_sortable_attributes()) === false)
+		    throw new Exception("Cannot order movies by $attribute_name");
+	    
+	    // Choose comparison function (especially for DateTime)
+	    $function = $attribute_name == "release_date" ? $other_comparison_function : $string_and_int_comparison_function;
+	    
+	    // Sort
+	    usort($movies, $function);
+		
+	    // If a DESC sort, reverse the array
+	    if ($order == "DESC")
+		    rsort($movies);
+		    
+	}
 }

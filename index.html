@@ -1,31 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Plyr - A simple, customizable HTML5 Video, Audio, YouTube and Vimeo player</title>
-    <meta
-      name="description"
-      content="A simple HTML5 media player with custom controls and WebVTT captions."
-    />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.6/plyr.css" />
-    <link
-      rel="preload"
-      as="font"
-      crossorigin
-      type="font/woff2"
-      href="https://cdn.plyr.io/static/fonts/gordita-medium.woff2"/>
-    <link
-      rel="preload"
-      as="font"
-      crossorigin
-      type="font/woff2"
-      href="https://cdn.plyr.io/static/fonts/gordita-bold.woff2"/>
-  </head>
+<head>
+	<meta charset="utf-8" />
+	<title>Plyr - A simple, customizable HTML5 Video, Audio, YouTube and Vimeo player</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="../views/design/plyr.css" />
+</head>
 
-  <body>
-    <video id="player" playsinline controls data-poster="/path/to/poster.jpg">
-        <track kind="captions" label="" src="" srclang="fr" default />
-    </video>
-  </body>
+<body>
+	<video controls
+			crossorigin
+			playsinline
+			poster="data/example.jpg" id="player">
+		<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4" type="video/mp4"/>
+		<track kind="captions" label="English" srclang="en" src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt" default />
+		<track kind="captions" label="Français" srclang="fr" src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt" />
+	</video>
+
+	<script src="./js/plyr.polyfilled.js"></script>
+	<script>
+	    const player = new Plyr("#player", {
+	      previewThumbnails: {
+	        enabled: false,
+	        src: ['https://cdn.plyr.io/static/demo/thumbs/100p.vtt', 'https://cdn.plyr.io/static/demo/thumbs/240p.vtt'],
+	      },
+	    });
+	</script>
+</body>
 </html>

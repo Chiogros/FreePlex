@@ -1,4 +1,5 @@
 DELETE TABLE Movies;
+DELETE TABLE SourceFolders;
 
 CREATE TABLE IF NOT EXISTS Movies (
 	title varchar(128) NOT NULL,
@@ -20,4 +21,9 @@ CREATE TABLE IF NOT EXISTS Movies (
 	imdb_votes varchar(4),
 	imdb_id varchar(16) PRIMARY KEY,
 	type varchar(32)
+);
+
+CREATE TABLE IF NOT EXISTS SourceFolders (
+	alias varchar(128) NOT NULL,
+	path varchar(512) PRIMARY KEY NOT NULL
 );

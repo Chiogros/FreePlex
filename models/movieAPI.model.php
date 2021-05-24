@@ -21,8 +21,7 @@ class MovieAPI {
             if ($xml['response'] == "True") {
                 return Movie::constructorFromXML($xml);
             }
+            throw new Exception("Cannot find movie with this title.");
         }
-        throw new Exception("Cannot find movie with this title.");
     }
-
 }
