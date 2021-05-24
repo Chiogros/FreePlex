@@ -1,11 +1,16 @@
- <link rel="stylesheet" href="design/items_list.css">
- <section>
-    <?php
-    foreach($items as $item) { ?>
-        <article>
-            <h3 class="title"><?=  ?></h3>
-            <img src="<?=  ?>" alt="<?=  ?>">
-            <p class="year"><?=  ?></p>
-        </article>
-    <?php } ?>
- </section>
+<!-- takes Movie[] $items -->
+
+<link rel="stylesheet" href="../views/design/global.css">
+<link rel="stylesheet" href="../views/design/items_list.css">
+<section>
+   <?php foreach($items as $item) { ?>
+	   <a href="#">
+	       <article>
+	           <h3 class="movie_title"><?= $item->title ?></h3>
+	           <div class="gradient"></div>
+	           <img src="<?= '../data/posters/' . $item->imdb_id . '.jpg' ?>" alt="<?= $item->title . ' poster' ?>">
+	           <p class="movie_year"><?= $item->year ?></p>
+	       </article>
+       </a>
+   <?php } ?>
+</section>
