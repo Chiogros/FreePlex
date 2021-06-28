@@ -9,7 +9,9 @@ class MovieDAO {
 		try { 
 			$this->db = new PDO($dsn); 
 		} catch(PDOException $e) { 
-			echo "The database cannot be opened : " . $e->getMessage(); 
+			$message = "The database cannot be opened : " . $e->getMessage();
+			echo $message;
+			throw new Exception($message);
 		}
 	}
 
