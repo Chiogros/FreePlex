@@ -1,8 +1,8 @@
-DELETE TABLE Movies;
-DELETE TABLE SourceFolders;
+DROP TABLE IF EXISTS Movies;
+DROP TABLE IF EXISTS Folders;
 
 CREATE TABLE IF NOT EXISTS Movies (
-	title varchar(128) NOT NULL,
+	title varchar(128) NOT NULL PRIMARY KEY,
 	year varchar(4),
 	classification varchar(64),
 	release_date varchar(32),
@@ -19,11 +19,12 @@ CREATE TABLE IF NOT EXISTS Movies (
 	metascore varchar(8),
 	imdb_rating varchar(4),
 	imdb_votes varchar(4),
-	imdb_id varchar(16) PRIMARY KEY,
-	type varchar(32)
+	imdb_id varchar(16),
+	type varchar(32),
+	path varchar(256)
 );
 
-CREATE TABLE IF NOT EXISTS SourceFolders (
+CREATE TABLE IF NOT EXISTS Folders (
 	alias varchar(128) NOT NULL,
 	path varchar(512) PRIMARY KEY NOT NULL
 );

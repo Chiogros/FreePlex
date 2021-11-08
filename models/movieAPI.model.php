@@ -15,7 +15,7 @@ class MovieAPI {
     
     
     
-    public function get_Movie(string $title) : Movie {
+    public function get(string $title) : Movie {
         $request = $this->url . "?t=" . urlencode($title) . "&plot=full&r=xml&apikey=" . $this->API_key;
         if ($xml = simplexml_load_file($request)) {
             if ($xml['response'] == "True") {

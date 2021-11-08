@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="../views/design/items_list.css">
 <section>
    <?php foreach($items as $item) { ?>
-	   <a href="#">
+	   <a href="player.ctrl.php?imdb_id=<?=  $item->imdb_id ?>">
 	       <article>
 	           <h3 class="movie_title"><?= $item->title ?></h3>
 	           <div class="gradient"></div>

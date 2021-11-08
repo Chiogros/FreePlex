@@ -1,5 +1,7 @@
 <?php
 
+require_once("movie.model.php");
+
 class MovieDAO {
 
 	private PDO $db;
@@ -15,18 +17,22 @@ class MovieDAO {
 		}
 	}
 
-	public function add_Movie(Movie $movie) {
+	public function add(Movie $movie) {
+		
+		print $movie->title;
 		
 		// Save poster
-		try {
-			$this->save_poster_to_local($movie->poster_url, $movie->imdb_id);
-		} catch (Exception $ex) {
-			error_log($ex->getMessage());
+		if (isset($movie->poster_url) && isset($movie->imdb_id)) {
+			try {
+				$this->save_poster_to_local($movie->poster_url, $movie->imdb_id);
+			} catch (Exception $ex) {
+				error_log($ex->getMessage());
+			}
 		}
 	
 		// Verify that Movie isn't already in db
-		if ($this->exists_Movie($movie->imdb_id))
-			throw new Exception("A movie with this imdb_id is already in database.");
+		if ($this->exists($movie->path))
+			throw new Exception("A movie with this name is already in database.");
 
 		// Add Movie in db
 		$sql = "INSERT INTO Movies VALUES (
@@ -48,7 +54,8 @@ class MovieDAO {
 			:imdb_rating,
 			:imdb_votes,
 			:imdb_id,
-			:type)";
+			:type,
+			:path)";
 		
 		try {
 			$request = $this->prepare_request($sql);
@@ -71,18 +78,19 @@ class MovieDAO {
 			$request->bindValue(':imdb_votes',$movie->imdb_votes , PDO::PARAM_INT);
 			$request->bindValue(':imdb_id',$movie->imdb_id , PDO::PARAM_STR);
 			$request->bindValue(':type',$movie->type , PDO::PARAM_STR);
+			$request->bindValue(':path', $movie->path, PDO::PARAM_STR);
 			$request->execute();
 		} catch (Exception $ex) {
 			throw $ex;
 		}
 	}
     
-	public function exists_Movie(string $imdb_id) : bool {
-		$sql = "SELECT COUNT(*) FROM Movies WHERE imdb_id = :imdb_id";
+	public function exists(string $title) : bool {
+		$sql = "SELECT COUNT(*) FROM Movies WHERE title = :title";
 		
 		try {
 			$request = $this->prepare_request($sql);
-			$request->bindValue(':imdb_id', $imdb_id, PDO::PARAM_STR);
+			$request->bindValue(':title', $title, PDO::PARAM_STR);
 			$request->execute();
 			return $request->fetch()[0];
 		} catch (Exception $ex) {
@@ -90,15 +98,15 @@ class MovieDAO {
 		}
 	}
     
-	public function get_Movie(string $imdb_id) : Movie {
-		$sql = "SELECT * FROM Movies WHERE imdb_id = :imdb_id";
+	public function get(string $title) : Movie {
+		$sql = "SELECT * FROM Movies WHERE title = :title";
 
-		if ($this->exists_Movie($imdb_id) === false)
-			throw new Exception("This imdb_id isn't in database.");
+		if ($this->exists_Movie($title) === false)
+			throw new Exception("This movie title isn't in database.");
 		
 		try {
 			$request = $this->prepare_request($sql);
-			$request->bindValue(':imdb_id', $imdb_id, PDO::PARAM_STR);
+			$request->bindValue(':title', $title, PDO::PARAM_STR);
 			$request->execute();
 			$dataFetched = $request->fetchAll()[0]; // [0] because data are already stored in an array
 			return Movie::constructorForDAO($dataFetched);
@@ -107,8 +115,8 @@ class MovieDAO {
 		}
 	}
     
-	public function get_all_imdb_ids() : array {
-		$sql = "SELECT imdb_id FROM Movies";
+	public function get_all_titles() : array {
+		$sql = "SELECT title FROM Movies";
 		
 		try {
 			$request = $this->prepare_request($sql);
@@ -156,7 +164,7 @@ class MovieDAO {
 		return $request;
 	}
 	
-	public function remove_Movie(string $imdb_id) : bool {
+	public function delete(string $imdb_id) : bool {
 		$sql = "DELETE FROM Movies WHERE imdb_id = :imdb_id";
 		
 		if ($this->exists_Movie($imdb_id) === false)
@@ -172,6 +180,7 @@ class MovieDAO {
 	}
     
 	public function save_poster_to_local(string $poster_url, string $imdb_id) : string {
+	
 		$poster_path = "../data/posters/" . $imdb_id . ".jpg";
 		
 		if (file_exists($poster_path))

@@ -21,27 +21,10 @@ class Movie {
     private ?int $imdb_votes;
     private ?string $imdb_id;
     private ?string $type;
+    private ?string $path;
+    public static array $arr;
     
-    private function __construct(
-        string $title, 
-        ?int $year,
-        ?string $classification,
-        ?DateTime $release_date,
-        int $runtime,
-        ?string $genre,
-        ?string $director,
-        ?string $writers,
-        ?string $actors,
-        ?string $synopsis,
-        ?string $languages,
-        ?string $countries,
-        ?string $awards,
-        ?string $poster_url,
-        ?string $metascore,
-        ?float $imdb_rating,
-        ?int $imdb_votes,
-        ?string $imdb_id,
-        ?string $type) 
+    public function __construct(array $data) 
     {
         $this->title = $title;
         $this->year = $year;
@@ -62,6 +45,7 @@ class Movie {
         $this->imdb_votes = $imdb_votes;
         $this->imdb_id = $imdb_id;
         $this->type = $type;
+        $this->path = $path;
     }
     
     public static function constructorFromXML(SimpleXMLElement $xml)  {
@@ -86,7 +70,8 @@ class Movie {
 	        (float) $movie_xml['imdbRating'],
 	        (int) $movie_xml['imdbVotes'],
 	        $movie_xml['imdbID'],
-	        $movie_xml['type']
+	        $movie_xml['type'],
+	        null
         );
     }
     
@@ -109,7 +94,8 @@ class Movie {
         ?float $imdb_rating,
         ?int $imdb_votes,
         ?string $imdb_id,
-        ?string $type )
+        ?string $type,
+        ?string $path )
     {
 	    return new Movie(
 		    $title,
@@ -130,7 +116,8 @@ class Movie {
 	        $imdb_rating,
 	        $imdb_votes,
 	        $imdb_id,
-	        $type
+	        $type,
+	        $path
 	    );
     }
     
@@ -154,7 +141,8 @@ class Movie {
 			$data['imdb_rating'],
 			$data['imdb_votes'],
 			$data['imdb_id'],
-			$data['type']
+			$data['type'],
+			$data['path']
 		);
 	}
     
@@ -167,10 +155,9 @@ class Movie {
     }
     
 	public function __set(string $attribute_name, $attribute_value) {
-		if (isset($this->$attribute_name) === false)
-			throw new Exception($attribute_name . " doesn't exist as attribute in " . __CLASS__ . ".");
-
-			// throw new Exception("Cannot set " . gettype($attribute_value) . " in " . gettype($this->$attribute_name) . " " . $attribute_name . " in " . __CLASS__ . ".");
+		/*if (isset($this->$attribute_name) === false)
+			throw new Exception($attribute_name . " doesn't exist as attribute in " . __CLASS__ . ".");*/
+		
 		$this->$attribute_name = $attribute_value;
 	}
 

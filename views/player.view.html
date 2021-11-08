@@ -1,19 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<title>Plyr - A simple, customizable HTML5 Video, Audio, YouTube and Vimeo player</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-</head>
+<!-- takes Movie $item -->
 
-<body>
-	<video controls
-			crossorigin
-			playsinline
-			poster="data/example.jpg" id="player">
+<link rel="stylesheet" href="../views/design/global.css">
+<link rel="stylesheet" href="../views/design/player.css">
+<section>
+	<video controls crossorigin playsinline 
+		poster="<?= '../data/posters/' . $item->imdb_id . '.jpg' ?>">
+		
 		<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4" type="video/mp4"/>
 		<track kind="captions" label="English" srclang="en" src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt" default />
 		<track kind="captions" label="Français" srclang="fr" src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt" />
+	
 	</video>
-</body>
-</html>
+</section>
